@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px;
+        }
+        td {
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Inventory Management System</h1>
+
+    <div class="form-container">
+        <h2>Add New Product</h2>
+        <input type="text" id="productName" placeholder="Product Name">
+        <input type="number" id="quantity" placeholder="Quantity">
+        <input type="number" id="price" placeholder="Price per unit">
+        <button onclick="addProduct()">Add Product</button>
+    </div>
+
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price (₹)</th>
+                <th>Total (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Products will be listed here -->
+        </tbody>
+    </table>
+
+    <script>
+        function addProduct() {
+            let name = document.getElementById("productName").value.trim();
+            let quantity = document.getElementById("quantity").value;
+            let price = document.getElementById("price").value;
+
+            if (!name || quantity <= 0 || price <= 0) {
+                alert("Please fill all fields correctly!");
+                return;
+            }
+
+            let table = document.getElementById("productTable").getElementsByTagName('tbody')[0];
+            let newRow = table.insertRow();
+
+            newRow.insertCell(0).innerText = name;
+            newRow.insertCell(1).innerText = quantity;
+            newRow.insertCell(2).innerText = price;
+            newRow.insertCell(3).innerText = (quantity * price).toFixed(2);
+
+            document.getElementById("productName").value = "";
+            document.getElementById("quantity").value = "";
+            document.getElementById("price").value = "";
+        }
+    </script>
+
+</body>
+</html>
