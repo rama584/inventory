@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Management System</title>
+
+<style>
+    /* 🎨 CSS Variables for Theme */
+    :root {
+        --primary-color: #4CAF50;
+        --primary-dark: #45a049;
+        --secondary-color: #f7f9fc;
+        --text-color: #333;
+        --border-radius: 8px;
+        --transition-speed: 0.3s;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: var(--secondary-color);
+        padding: 20px;
+        margin: 0;
+    }
+
+    h1 {
+        text-align: center;
+        color: var(--text-color);
+        position: relative;
+    }
+
+    /* ✨ Decorative line under heading */
+    h1::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--primary-color);
+        margin: 10px auto 0;
+        border-radius: 2px;
+    }
+
+    .form-container {
+        background: white;
+        padding: 20px;
+        max-width: 400px;
+        margin: auto;
+        border-radius: var(--border-radius);
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        transition: transform var(--transition-speed);
+    }
+
+    /* Smooth hover effect */
+    .form-container:hover {
+        transform: scale(1.02);
+    }
+
+    input, button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        background-color: var(--primary-color);
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        position: relative;
+        overflow: hidden;
+        transition: background-color var(--transition-speed);
+    }
+
+    /* Animated Button Hover */
+    button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.3);
+        transition: left 0.4s;
+    }
+    button:hover::before {
+        left: 100%;
+    }
+    button:hover {
+        background-color: var(--primary-dark);
+    }
+
+    /* Table Styles */
+    table {
+        margin-top: 30px;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        text-align: center;
+        padding: 8px;
+    }
+    th {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Responsive Table */
+    @media (max-width: 600px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+        tr {
+            margin-bottom: 15px;
+        }
+        td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;
+        }
+        td::before {
+            position: absolute;
+            left: 10px;
+            text-align: left;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+        td:nth-of-type(1)::before { content: "Product Name"; }
+        td:nth-of-type(2)::before { content: "Quantity"; }
+        td:nth-of-type(3)::before { content: "Price (₹)"; }
+        td:nth-of-type(4)::before { content: "Total (₹)"; }
+    }
+
+    /* 🎞 Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    tr {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+</style>
+</head>
+<body>
+
+<h1>Inventory Management System</h1>
+
+<div class="form-container">
+    <h2>Add New Product</h2>
+    <input type="text" id="productName" placeholder="Product Name">
+    <input type="number" id="quantity" placeholder="Quantity">
+    <input type="number" id="price" placeholder="Price per unit">
+    <button id="addProductBtn">Add Product</button>
+</div>
+
+<!-- Extra button for JS activity -->
+<div style="text-align:center; margin-top:20px;">
+    <button id="clickMeBtn">Click Me</button>
+</div>
+
+<table id="productTable">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price (₹)</th>
+            <th>Total (₹)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Products will be listed here -->
+    </tbody>
+</table>
+
+<script>
+    // 📢 Welcome Alert
+    window.addEventListener("load", () => {
+        alert("Welcome to the Inventory Management System!");
+    });
+
+    // Store products in an array
+    const products = [];
+
+    // Function to add product
+    function addProduct() {
+        let name = document.getElementById("productName").value.trim();
+        let quantity = parseInt(document.getElementById("quantity").value);
+        let price = parseFloat(document.getElementById("price").value);
+
+        // Validation
+        if (!name || isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
+            alert("❌ Please fill all fields correctly!");
+            return;
+        }
+
+        // Store in array
+        products.push({ name, quantity, price, total: quantity * price });
+
+        // Update table
+        updateTable();
+
+        // Reset inputs
+        document.getElementById("productName").value = "";
+        document.getElementById("quantity").value = "";
+        document.getElementById("price").value = "";
+    }
+
+    // Function to update table
+    function updateTable() {
+        let tableBody = document.getElementById("productTable").querySelector("tbody");
+        tableBody.innerHTML = ""; // Clear old rows
+
+        products.forEach(product => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${product.name}</td>
+                <td>${product.quantity}</td>
+                <td>${product.price.toFixed(2)}</td>
+                <td>${product.total.toFixed(2)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Event listener for Add Product button
+    document.getElementById("addProductBtn").addEventListener("click", addProduct);
+
+    // 🎯 Extra JS Activity: Click Me Button
+    document.getElementById("clickMeBtn").addEventListener("click", () => {
+        document.body.style.backgroundColor =
+            document.body.style.backgroundColor === "lightyellow" ? "var(--secondary-color)" : "lightyellow";
+        document.querySelector("h1").innerText = "You Clicked the Button!";
+    });
+</script>
+
+</body>
+</html>
