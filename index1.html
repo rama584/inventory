@@ -6,7 +6,6 @@
 <title>Inventory Management System</title>
 
 <style>
-    /* 🎨 CSS Variables for Theme */
     :root {
         --primary-color: #4CAF50;
         --primary-dark: #45a049;
@@ -15,21 +14,17 @@
         --border-radius: 8px;
         --transition-speed: 0.3s;
     }
-
     body {
         font-family: Arial, sans-serif;
         background-color: var(--secondary-color);
         padding: 20px;
         margin: 0;
     }
-
     h1 {
         text-align: center;
         color: var(--text-color);
         position: relative;
     }
-
-    /* ✨ Decorative line under heading */
     h1::after {
         content: "";
         display: block;
@@ -39,7 +34,6 @@
         margin: 10px auto 0;
         border-radius: 2px;
     }
-
     .form-container {
         background: white;
         padding: 20px;
@@ -49,12 +43,9 @@
         box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
         transition: transform var(--transition-speed);
     }
-
-    /* Smooth hover effect */
     .form-container:hover {
         transform: scale(1.02);
     }
-
     input, button {
         width: 100%;
         padding: 10px;
@@ -63,7 +54,6 @@
         border-radius: 5px;
         font-size: 14px;
     }
-
     button {
         background-color: var(--primary-color);
         color: white;
@@ -73,8 +63,6 @@
         overflow: hidden;
         transition: background-color var(--transition-speed);
     }
-
-    /* Animated Button Hover */
     button::before {
         content: "";
         position: absolute;
@@ -91,8 +79,6 @@
     button:hover {
         background-color: var(--primary-dark);
     }
-
-    /* Table Styles */
     table {
         margin-top: 30px;
         width: 100%;
@@ -107,8 +93,6 @@
         background-color: var(--primary-color);
         color: white;
     }
-
-    /* Responsive Table */
     @media (max-width: 600px) {
         table, thead, tbody, th, td, tr {
             display: block;
@@ -133,8 +117,6 @@
         td:nth-of-type(3)::before { content: "Price (₹)"; }
         td:nth-of-type(4)::before { content: "Total (₹)"; }
     }
-
-    /* 🎞 Animation */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -143,6 +125,35 @@
         animation: fadeIn 0.5s ease-in-out;
     }
 
+    /* 📌 Card Styles */
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 30px;
+        justify-content: center;
+    }
+    .card {
+        background: white;
+        padding: 15px;
+        border-radius: var(--border-radius);
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        width: 200px;
+        text-align: center;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+    .delete-btn {
+        margin-top: 10px;
+        background-color: red;
+        border: none;
+        color: white;
+        padding: 8px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .delete-btn:hover {
+        background-color: darkred;
+    }
 </style>
 </head>
 <body>
@@ -157,10 +168,13 @@
     <button id="addProductBtn">Add Product</button>
 </div>
 
-<!-- Extra button for JS activity -->
 <div style="text-align:center; margin-top:20px;">
     <button id="clickMeBtn">Click Me</button>
+    <button id="createCardBtn">Create Card</button>
 </div>
+
+<!-- 📌 Card Container -->
+<div class="card-container" id="cardContainer"></div>
 
 <table id="productTable">
     <thead>
@@ -171,48 +185,37 @@
             <th>Total (₹)</th>
         </tr>
     </thead>
-    <tbody>
-        <!-- Products will be listed here -->
-    </tbody>
+    <tbody></tbody>
 </table>
 
 <script>
-    // 📢 Welcome Alert
     window.addEventListener("load", () => {
         alert("Welcome to the Inventory Management System!");
     });
 
-    // Store products in an array
     const products = [];
 
-    // Function to add product
     function addProduct() {
         let name = document.getElementById("productName").value.trim();
         let quantity = parseInt(document.getElementById("quantity").value);
         let price = parseFloat(document.getElementById("price").value);
 
-        // Validation
         if (!name || isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
             alert("❌ Please fill all fields correctly!");
             return;
         }
 
-        // Store in array
         products.push({ name, quantity, price, total: quantity * price });
-
-        // Update table
         updateTable();
 
-        // Reset inputs
         document.getElementById("productName").value = "";
         document.getElementById("quantity").value = "";
         document.getElementById("price").value = "";
     }
 
-    // Function to update table
     function updateTable() {
         let tableBody = document.getElementById("productTable").querySelector("tbody");
-        tableBody.innerHTML = ""; // Clear old rows
+        tableBody.innerHTML = "";
 
         products.forEach(product => {
             let row = document.createElement("tr");
@@ -226,15 +229,34 @@
         });
     }
 
-    // Event listener for Add Product button
-    document.getElementById("addProductBtn").addEventListener("click", addProduct);
-
-    // 🎯 Extra JS Activity: Click Me Button
+    // 🎯 Click Me Button
     document.getElementById("clickMeBtn").addEventListener("click", () => {
         document.body.style.backgroundColor =
             document.body.style.backgroundColor === "lightyellow" ? "var(--secondary-color)" : "lightyellow";
         document.querySelector("h1").innerText = "You Clicked the Button!";
     });
+
+    // 📌 Create Card Feature
+    document.getElementById("createCardBtn").addEventListener("click", () => {
+        const cardContainer = document.getElementById("cardContainer");
+
+        let card = document.createElement("div");
+        card.classList.add("card");
+        card.innerHTML = `
+            <h3>New Card</h3>
+            <p>This is a dynamically created card.</p>
+            <button class="delete-btn">Delete</button>
+        `;
+
+        // Delete button functionality
+        card.querySelector(".delete-btn").addEventListener("click", () => {
+            card.remove();
+        });
+
+        cardContainer.appendChild(card);
+    });
+
+    document.getElementById("addProductBtn").addEventListener("click", addProduct);
 </script>
 
 </body>
